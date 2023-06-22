@@ -1,6 +1,6 @@
 package com.alura.modelo;
 
-import com.alura.modelo.enums.StatusTopico;
+import com.alura.modelo.enums.TopicStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -10,8 +10,8 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
-@Table(name = "topics")
 @Entity(name = "Topic")
+@Table(name = "topics")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -20,26 +20,27 @@ public class Topic {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String titulo;
-	private String mensaje;
-	private LocalDateTime fechaCreacion = LocalDateTime.now();
+	private String title;
+	private String message;
+	private LocalDateTime creationDate = LocalDateTime.now();
+
 	@Enumerated(EnumType.STRING)
-	private StatusTopico status = StatusTopico.NO_RESPONDIDO;
+	private TopicStatus status = TopicStatus.UNSOLVED;
 
 	@ManyToOne
-	@JoinColumn(name = "user_id")
-	private User autor;
+	@JoinColumn(name = "user_id", nullable=false)
+	private User user;
 
 	@ManyToOne
-	@JoinColumn(name = "course_id")
+	@JoinColumn(name = "course_id", nullable=false)
 	private Course course;
 
 	@OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
 
-	public Topic(String titulo, String mensaje, Course course) {
-		this.titulo = titulo;
-		this.mensaje = mensaje;
+	public Topic(String title, String message, Course course) {
+		this.title = title;
+		this.message = message;
 		this.course = course;
 	}
 

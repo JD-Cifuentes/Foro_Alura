@@ -1,5 +1,6 @@
 package com.alura.modelo;
 
+import com.alura.modelo.enums.CourseCategories;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,8 +9,8 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+@Entity(name = "Course")
 @Table(name = "courses")
-@Entity(name = "course")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,19 +18,21 @@ public class Course {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nombre;
-	private String categoria; //todo crear enum
+	private String name;
+
+	@Enumerated(EnumType.STRING)
+	private CourseCategories category;
 
 	@ManyToOne
-	@JoinColumn(name = "User_id")
+	@JoinColumn(name = "user_id", nullable=false)
 	private User user;
 
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
 	private List<Topic> topics = new ArrayList<>();
 
-	public Course(String nombre, String categoria) {
-		this.nombre = nombre;
-		this.categoria = categoria;
+	public Course(String name, CourseCategories category) {
+		this.name = name;
+		this.category = category;
 	}
 	
 	@Override

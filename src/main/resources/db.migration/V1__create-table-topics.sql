@@ -4,8 +4,8 @@ CREATE TABLE topics(
     message varchar(2000) not null unique,
     creation_date date not null unique,
     status varchar(100) not null,
-    autor varchar(100) not null,
-    course varchar(100),
+    user_id bigint not null,
+    course_id bigint not null,
 
     primary key(id)
 );

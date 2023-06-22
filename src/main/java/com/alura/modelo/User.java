@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity(name = "User")
-@Table(name="Users")
+@Table(name="users")
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
@@ -17,9 +17,9 @@ public class User {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String nombre;
+	private String name;
 	private String email;
-	private String contrasena;
+	private String password;
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Topic> topics = new ArrayList<>();

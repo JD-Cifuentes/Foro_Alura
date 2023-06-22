@@ -16,19 +16,19 @@ public class Answer {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String mensaje;
+	private String message;
 
 	@ManyToOne
-	@JoinColumn(name = "topic_id")
+	@JoinColumn(name = "topic_id", nullable=false)
 	private Topic topic;
 
-	private LocalDateTime fechaCreacion = LocalDateTime.now();
+	private LocalDateTime creationDate = LocalDateTime.now();
 
 	@ManyToOne
-	@JoinColumn(name = "User_id")
-	private User autor;
+	@JoinColumn(name = "user_id", nullable=false)
+	private User user;
 
-	private Boolean solucion = false;
+	private Boolean solution = false;
 
 	@Override
 	public int hashCode() {
