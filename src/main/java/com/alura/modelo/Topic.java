@@ -1,5 +1,6 @@
 package com.alura.modelo;
 
+import com.alura.modelo.dto.TopicRegisterData;
 import com.alura.modelo.enums.TopicStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -22,26 +23,32 @@ public class Topic {
 	private Long id;
 	private String title;
 	private String message;
-	private LocalDateTime creationDate = LocalDateTime.now();
 
+	private LocalDateTime creationDate = LocalDateTime.now();
 	@Enumerated(EnumType.STRING)
 	private TopicStatus status = TopicStatus.UNSOLVED;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable=false)
 	private User user;
 
-	@ManyToOne
+	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "course_id", nullable=false)
 	private Course course;
 
 	@OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
 
-	public Topic(String title, String message, Course course) {
-		this.title = title;
-		this.message = message;
-		this.course = course;
+	public Topic(TopicRegisterData topicRegisterData) {
+		this.title = topicRegisterData.title();
+		this.message = topicRegisterData.message();
+		setUserAndCourseByIds(topicRegisterData.userId(), topicRegisterData.courseId());
+	}
+
+	private void setUserAndCourseByIds(Long userId, Long courseId) {
+		//todo implementar cuerpo que permita buscar el usuario y el curso
+		// por sus reespectivos ID en la base de datos y
+		// agregarolos al objeto
 	}
 
 	@Override
