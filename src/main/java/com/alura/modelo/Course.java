@@ -23,9 +23,8 @@ public class Course {
 	@Enumerated(EnumType.STRING)
 	private CourseCategories category;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "user_id", nullable=false)
-	private User user;
+	@ManyToMany(mappedBy = "courses", fetch = FetchType.LAZY)
+	private List<User> user;
 
 	@OneToMany(mappedBy = "course", cascade = CascadeType.ALL)
 	private List<Topic> topics = new ArrayList<>();

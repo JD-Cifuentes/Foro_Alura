@@ -1,17 +1,16 @@
 package com.alura.modelo.dto;
 
-import com.alura.modelo.Course;
 import com.alura.modelo.Topic;
-import com.alura.modelo.User;
 
-public record TopicResponseData(Long id, String title, String message, User user, Course course) {
+
+public record TopicResponseData(String title, String message,String topicStatus, String userName, String courseName) {
     public TopicResponseData(Topic topic){
         this(
-                topic.getId(),
                 topic.getTitle(),
                 topic.getMessage(),
-                topic.getUser(),
-                topic.getCourse()
+                topic.getStatus().toString(),
+                topic.getUser().getName(),
+                topic.getCourse().getName()
         );
 
     }

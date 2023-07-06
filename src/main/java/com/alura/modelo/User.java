@@ -27,7 +27,12 @@ public class User {
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	@ManyToMany(fetch = FetchType.LAZY)
+	@JoinTable(
+			name = "user_course",
+			joinColumns = @JoinColumn(name = "user_id"),
+			inverseJoinColumns = @JoinColumn(name = "course_id")
+	)
 	private List<Course> courses = new ArrayList<>();
 
 

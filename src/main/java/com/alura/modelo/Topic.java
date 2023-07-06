@@ -1,6 +1,7 @@
 package com.alura.modelo;
 
 import com.alura.modelo.dto.TopicRegisterData;
+import com.alura.modelo.dto.TopicUpdateDataById;
 import com.alura.modelo.enums.TopicStatus;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -10,6 +11,8 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.alura.modelo.enums.TopicStatus.getTopicStatusByTopicStatusName;
 
 @Entity(name = "Topic")
 @Table(name = "topics")
@@ -21,12 +24,14 @@ public class Topic {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
+	@Column(unique = true)
 	private String title;
+	@Column(unique = true)
 	private String message;
 
 	private LocalDateTime creationDate = LocalDateTime.now();
 	@Enumerated(EnumType.STRING)
-	private TopicStatus status = TopicStatus.UNSOLVED;
+	private TopicStatus status = TopicStatus.NO_ANSWERED;
 
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "user_id", nullable=false)
@@ -39,16 +44,12 @@ public class Topic {
 	@OneToMany(mappedBy = "topic", cascade = CascadeType.ALL)
 	private List<Answer> answers = new ArrayList<>();
 
-	public Topic(TopicRegisterData topicRegisterData) {
+	public Topic(TopicRegisterData topicRegisterData, User user, Course course) {
 		this.title = topicRegisterData.title();
 		this.message = topicRegisterData.message();
-		setUserAndCourseByIds(topicRegisterData.userId(), topicRegisterData.courseId());
-	}
+		this.user = user;
+		this.course = course;
 
-	private void setUserAndCourseByIds(Long userId, Long courseId) {
-		//todo implementar cuerpo que permita buscar el usuario y el curso
-		// por sus reespectivos ID en la base de datos y
-		// agregarolos al objeto
 	}
 
 	@Override
@@ -74,6 +75,27 @@ public class Topic {
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
+	}
+
+	public void updateData(TopicUpdateDataById topicUpdateDataById, Course course) {
+		if (!topicUpdateDataById.title().isBlank()){
+			this.title = topicUpdateDataById.title();
+		}
+		if (!topicUpdateDataById.message().isBlank()){
+			this.message = topicUpdateDataById.message();
+		}
+		if (!topicUpdateDataById.topicStatus().isBlank()){
+			try {
+				this.status = getTopicStatusByTopicStatusName(topicUpdateDataById.topicStatus());
+			} catch (NoSuchFieldException | IllegalAccessException e) {
+				throw new RuntimeException(e);
+			}
+		}
+		this.course = course;
+	}
+
+	public void topicSolved(){
+		this.status = TopicStatus.SOLVED;
 	}
 
 
